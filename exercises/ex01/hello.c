@@ -13,7 +13,8 @@ int main() {
           printf("c is odd\n");
       }
     printf("%i!\n",x);//Printing the value of X
-    return 0;// When I am running the -02 flag, i see a lot of comments
-    //generated in the command line but no difference in the output. Maybe i am
-    //using the -02 option wrong?
+    return 0;// When I am running the -o2 flag, i see a lot of comments
+    //generated in the command line but no difference in the output.
+
 }
+//This includes the changes made in class.
