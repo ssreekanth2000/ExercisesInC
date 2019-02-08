@@ -4,8 +4,8 @@ Code which modifies count of the remianing deck on the basis of the uses input
 It checks if the input is one of the face cards and if not checks if its a
 valid number and makes appropriate changes to the count value.
 
-card_name:- Input by the user
-count:- The value of the deck.
+input_1:- Input by the user
+Val:- The value being added to the array
 
 */
 #include <stdio.h>
