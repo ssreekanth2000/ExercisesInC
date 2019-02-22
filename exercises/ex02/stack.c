@@ -15,9 +15,13 @@ int *foo() {
     //retruns the address of a local variable
     int array[SIZE];
 
+<<<<<<< HEAD
     //printf("%p\n", array); When I comment the print, it removes that error
     // but gives me an error for the return array about returning address of
     //local variable.
+=======
+    printf("%p\n", array);
+>>>>>>> 12d0788dab1ae56a12243b954a7877e1d69b91ef
 
     for (i=0; i<SIZE; i++) {
         array[i] = 42;
@@ -29,7 +33,7 @@ void bar() {
     int i;
     int array[SIZE];
 
-    //printf("%p\n", array);
+    printf("%p\n", array);
 
     for (i=0; i<SIZE; i++) {
         array[i] = i;
