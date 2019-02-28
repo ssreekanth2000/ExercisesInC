@@ -10,7 +10,7 @@
 int tests_run = 0;
 
 static char * test_1() {
-  char *res = Calloc(0, 1);
+    char *res = icmpcode_v4(0);
     char *message = "test1 failed: (\"icmpcode_v4\", \"0\") should return \"network unreachable\"";
     mu_assert(message, strcmp(res, "network unreachable") == 0);
     return NULL;
