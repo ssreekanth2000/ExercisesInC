@@ -32,7 +32,17 @@ length: number of elements in the array
 returns: new array, caller must free
 */
 // TODO: Write this function
+double *get_int_part(double *array, int length){
 
+  double array1[length];
+  for (size_t i = 0; i < length; i++) {
+    modf(array[i], &array1[i]);
+
+    /* code */
+  }
+
+
+}
 void test_get_int_part()
 {
     double array[] = {1.2, 2.718, 3.1412, 5.6};
@@ -67,7 +77,7 @@ void test_get_both_parts()
     double *frac_part;
     int length = sizeof(array) / sizeof(double);
 
-    double *int_part = get_both_parts(array, length, &frac_part);
+    double *int_part = get_int_part(array, length);
 
     for (int i=0; i<length; i++) {
         printf("%.18lf  %.18lf\n", int_part[i], expected_int[i]);

@@ -66,7 +66,7 @@ char *strfilter4(char *string, char *letters) {
 }
 
 int main() {
-    char string[] = "equation";
+    char string[] = "equadjaskldjtion";
     char letters[] = "aeiou";
 
     char *filtered = strfilter1(string, letters);
