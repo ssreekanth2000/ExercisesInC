@@ -5,6 +5,7 @@ License: MIT License https://opensource.org/licenses/MIT
 */
 
 #include <stdlib.h>
+##include "rand.h"
 
 // generate a random float using the algorithm described
 // at http://allendowney.com/research/rand
