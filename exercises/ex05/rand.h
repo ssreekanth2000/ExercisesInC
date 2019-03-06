@@ -83,6 +83,7 @@ double my_random_double()
         //float f;
         int i;
         double d;
+        float f
     } b;
 
     // generate random bits until we see the first set bit
@@ -104,7 +105,7 @@ double my_random_double()
     // use the remaining bit as the mantissa
     mant = x >> 8;
     b.i = (exp << 23) | mant;
-    //b.d = b.f;
+    b.d = b.f;
 
     return b.d;
 }

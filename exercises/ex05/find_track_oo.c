@@ -20,18 +20,23 @@ char tracks[][80] = {
 };
 
 
-typedef regex_t Regex;
-
-
+typedef struct {
+    regex_t inner_struct[1];
+} Regex;
 /* Returns a new Regex that matches the given pattern.
 *
-* pattern: string regex
+* pattern:string regex
 * flags: flags passed to regcomp
 * returns: new Regex
 */
 Regex *make_regex(char *pattern, int flags) {
-    // FILL THIS IN!
-    return NULL;
+    Regex *re = malloc(sizeof(Regex));
+    int r = regcomp(re->inner_struct,pattern,flags);
+    if (r){
+      fprintf(stderr, "could not compile\n");
+      exit(1);
+    }
+    return re;
 }
 
 /* Checks whether a regex matches a string.
@@ -41,8 +46,13 @@ Regex *make_regex(char *pattern, int flags) {
 * returns: 1 if there's a match, 0 otherwise
 */
 int regex_match(Regex *regex, char *s) {
-    // FILL THIS IN!
-    return 0;
+  int r = regexec(regex->inner_struct,s,0,NULL,0);
+  if(r && r != REG_NOMATCH){
+    fprintf(stderr, "%regex err\n" );
+    exit(1);
+  }
+
+  return !r;
 }
 
 /* Frees a Regex.
@@ -50,7 +60,8 @@ int regex_match(Regex *regex, char *s) {
 * regex: Regex pointer
 */
 void regex_free(Regex *regex) {
-    // FILL THIS IN!
+    regfree(regex->inner_struct);
+    free(regex);
 }
 
 
