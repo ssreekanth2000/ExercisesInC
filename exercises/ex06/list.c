@@ -54,8 +54,16 @@ void print_list(Node **list) {
 * returns: int or -1 if the list is empty
 */
 int pop(Node **list) {
-    // FILL THIS IN!
-    return 0;
+    Node *head = *list;
+    if (head==NULL){
+      return -1;
+    }
+    Node *next =head->next;
+    int val = head->val;
+    *list=next;
+    free(head);
+
+  return val;
 }
 
 
@@ -65,7 +73,9 @@ int pop(Node **list) {
 * val: value to add
 */
 void push(Node **list, int val) {
-    // FILL THIS IN!
+    Node *head = *list;
+    Node *new_n = make_node(val,head);
+    *list= new_n;
 }
 
 
@@ -79,9 +89,31 @@ void push(Node **list, int val) {
 * returns: number of nodes removed
 */
 int remove_by_value(Node **list, int val) {
-    // FILL THIS IN!
-    return 0;
-}
+  Node *current=NULL;
+  int count= 0;
+  Node *next = *list;
+  while (next!= NULL){
+    if(next->val == val){
+      next=next->next;
+      count++;
+    }
+    else{
+      if(current == NULL){
+      *list =next;
+    }
+      else{
+        current->next =next;
+      }
+      current = next;
+      next=current->next;
+    }
+  }
+    current->next =next;
+    return count;
+  }
+
+
+
 
 
 /* Reverses the elements of the list.
@@ -90,10 +122,34 @@ int remove_by_value(Node **list, int val) {
 *
 * list: pointer to pointer to Node
 */
-void reverse(Node **list) {
-    // FILL THIS IN!
-}
+// void reverse(Node **list) {
+//     Node* prev = NULL;
+//     Node* next = *list;
+//     Node* temp;
+//     while(next != NULL){
+//       temp= next->next;
+//       temp->next=prev;
+//       prev = next;
+//       next = temp;
+//     }
+//     *list = prev;
+// }
 
+void reverse( Node **list)
+{
+    Node* previous   = NULL;
+    Node* current = *list;
+    Node* next = NULL;
+    while (current != NULL)
+    {
+        next  = current->next;
+        current->next = previous;
+
+        previous = current;
+        current = next;
+    }
+    *list = previous;
+}
 
 int main() {
     Node *head = make_node(1, NULL);
@@ -114,6 +170,9 @@ int main() {
     print_list(list);
 
     remove_by_value(list, 7);
+    print_list(list);
+
+    reverse(list);
     print_list(list);
 
     reverse(list);
