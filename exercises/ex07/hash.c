@@ -178,8 +178,9 @@ int hash_hashable(Hashable *hashable)
 */
 int equal_int (void *ip, void *jp)
 {
-    // FILL THIS IN!
-    return 0;
+    int i = (*(int *)ip);
+    int j = (*(int *)jp);
+    return i==j;
 }
 
 
@@ -192,8 +193,10 @@ int equal_int (void *ip, void *jp)
 */
 int equal_string (void *s1, void *s2)
 {
-    // FILL THIS IN!
-    return 0;
+  char* c1 = (char *)s1;
+  char* c2 = (char *)s2;
+  int comp= strcmp(c1,c2);
+  return comp!=0;
 }
 
 
@@ -207,8 +210,10 @@ int equal_string (void *s1, void *s2)
 */
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
-    // FILL THIS IN!
-    return 0;
+    int ha1=hash_hashable(h1);
+    int ha2=hash_hashable(h2);
+    int eq = ha1==ha2;
+    return eq;
 }
 
 
@@ -341,15 +346,21 @@ void print_map(Map *map)
 /* Adds a key-value pair to a map. */
 void map_add(Map *map, Hashable *key, Value *value)
 {
-    // FILL THIS IN!
+    int h= hash_hashable(key);
+    int position = h % map->n;
+    map->lists[position]= prepend(key,value,map->lists[position]);
+
+
 }
 
 
 /* Looks up a key and returns the corresponding value, or NULL. */
 Value *map_lookup(Map *map, Hashable *key)
 {
-    // FILL THIS IN!
-    return NULL;
+  int h= hash_hashable(key);
+  int position = h % map->n;
+  Node *list1=map->lists[position];
+    return list_lookup(list1,key);
 }
 
 
