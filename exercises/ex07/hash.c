@@ -301,7 +301,15 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 /* Looks up a key and returns the corresponding value, or NULL */
 Value *list_lookup(Node *list, Hashable *key)
 {
-    // FILL THIS IN!
+    Node *now = list;
+    Hashable *h1;
+    while (now != NULL) {
+      h1 = now->key;
+      if(equal_hashable(key,h1)){
+        return now->value;
+      }
+      now=now->next;
+    }
     return NULL;
 }
 
@@ -375,6 +383,7 @@ void print_lookup(Value *value)
 
 int main ()
 {
+
     Hashable *hashable1 = make_hashable_int (1);
     Hashable *hashable2 = make_hashable_string ("Apple");
     Hashable *hashable3 = make_hashable_int (2);
