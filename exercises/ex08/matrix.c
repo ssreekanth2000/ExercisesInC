@@ -25,12 +25,15 @@ Matrix *make_matrix(int num_rows, int num_cols) {
         matrix->rows[i] = calloc(num_cols, sizeof(double));
     }
     return matrix;
+
 }
 
 /* Free a matrix.
 */
 void free_matrix(Matrix *matrix) {
-    // TODO: Fill this in.
+    free(matrix->rows);
+    free(matrix);
+
 }
 
 /* Print a row of a matrix.
