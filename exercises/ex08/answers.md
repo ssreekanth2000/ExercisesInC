@@ -22,4 +22,5 @@ GLib provides advanced data structures, such as memory chunks, doubly and singly
  
  What do you have to do to compile and run a “Hello GLib” example?
  
- gcc $(pkg-config --cflags --libs glib-2.0) ex_compile.c
+ gcc -Wall -o ex_compile ex_compile.c $(pkg-config --cflags --libs glib-2.0)
+ ./ex_compile
