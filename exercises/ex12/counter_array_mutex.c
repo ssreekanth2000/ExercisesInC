@@ -46,7 +46,6 @@ Shared *make_shared(int end)
     for (i=0; i<shared->end; i++) {
         shared->array[i] = 0;
     }
-
     shared->mutex = make_mutex();
     return shared;
 }
@@ -73,20 +72,18 @@ void join_thread(pthread_t thread)
 
 void child_code(Shared *shared)
 {
-    printf("Starting child at counter %d\n", shared->counter);
-
+    //printf("Starting child at counter %d\n", shared->counter);
     while (1) {
-        mutex_lock(shared->mutex);
+      mutex_lock(shared->mutex);
         if (shared->counter >= shared->end) {
-            mutex_unlock(shared->mutex);
+          mutex_unlock(shared->mutex);
             return;
         }
-
         shared->array[shared->counter]++;
         shared->counter++;
 
         if (shared->counter % 10000 == 0) {
-            printf("%d\n", shared->counter);
+            //printf("%d\n", shared->counter);
         }
         mutex_unlock(shared->mutex);
     }
