@@ -29,6 +29,12 @@ void error(char *msg) {
     fprintf(stderr, "%s: %s\n", msg, strerror(errno));
     exit(1);
 }
+void perror_exit(char *s)
+{
+  perror(s);
+  exit(-1);
+}
+
 
 /* Set up the signal catcher.
 */
@@ -96,12 +102,12 @@ void bind_to_port(int socket, int port) {
 */
 int say(int socket, char *s)
 {
-    int res = send(socket, s, strlen(s), 0);
+    int res = send(socket, s, strlen(s), 0);//This does not create a seg fault
+    // but does shut down the child process.
     if (res == -1)
         error("Error talking to the client");
     return res;
 }
-
 /* Read from the client.
 
 Returns: number of characters read.
@@ -136,62 +142,59 @@ int read_in(int socket, char *buf, int len)
 
     return strlen(buf);
 }
-void child_code(Shared *shared)
+pthread_t make_thread(void *(*entry)(void *), int *connection)
 {
-  char buf[255];
-  int connect_d = open_client_socket();
-  close (shared->listener_d);
-  if (say(connect_d, intro_msg) == -1) {
-      close(connect_d);
-
-  }
-
-  read_in(connect_d, buf, sizeof(buf));
-  // TODO (optional): check to make sure they said "Who's there?"
-
-  if (say(connect_d, "Surrealist giraffe.\n") == -1) {
-      close(connect_d);
-
-  }
-
-  read_in(connect_d, buf, sizeof(buf));
-  // TODO (optional): check to make sure they said "Surrealist giraffe who?"
-
-  if (say(connect_d, "Bathtub full of brightly-colored machine tools.\n") == -1) {
-      close(connect_d);
-
-  }
-
-  close(connect_d);
-
-}
-pthread_t make_thread(void *(*entry)(void *), Shared *shared){
   int ret;
   pthread_t thread;
-  ret = pthread_create(&thread, NULL, entry,(void *) shared);
-  if (ret != 0){
-    perror_exit("thread_create failed");
+
+  ret = pthread_create(&thread, NULL, entry, (void *) connection);
+  if (ret != 0) {
+      perror_exit("pthread_create failed");
   }
   return thread;
 }
-Shared *make_shared(int listener_d)
+
+void *connection_code(void *arg)
 {
-  Shared *shared = check_malloc(sizeof(Shared));
-  shared->listener_d = listener_d;
-  return shared;
-}
-void *entry(void *arg)
-{
-  Shared *shared = (Shared *) arg;
-  child_code(shared);
-  printf("Child done\n" );
-  pthread_exit(NULL);
+    char buf[255];
+    int connect_d = *(int *) arg;
+    if (say(connect_d, intro_msg) == -1) {
+        close(connect_d);
+        pthread_exit(NULL);
+    }
+
+    read_in(connect_d, buf, sizeof(buf));
+    if(strncasecmp("Who's there?", buf, 12)){
+        say(connect_d, "You should say 'Who's there?'\n");
+    }
+    else{
+        if (say(connect_d, "Surrealist giraffe.\n") == -1) {
+            close(connect_d);
+            pthread_exit(NULL);
+        }
+
+        read_in(connect_d, buf, sizeof(buf));
+        if(strncasecmp("Surrealist giraffe who?", buf, 23)){
+            say(connect_d, "You should say 'Surrealist giraffe who?'\n");
+        }
+        else{
+            if (say(connect_d, "Bathtub full of brightly-colored machine tools.\n") == -1) {
+                close(connect_d);
+                pthread_exit(NULL);
+            }
+
+        }
+
+    }
+
+    close(connect_d);
+    pthread_exit(NULL);
+
 }
 
 int main(int argc, char *argv[])
 {
 
-    // set up the signal handler
     if (catch_signal(SIGINT, handle_shutdown) == -1)
         error("Setting interrupt handler");
 
@@ -201,15 +204,14 @@ int main(int argc, char *argv[])
     bind_to_port(listener_d, port);
 
     if (listen(listener_d, 10) == -1)
-        error("Can't listen");
-        Shared *share = make_shared(listener_d);
-
-
+        error("Cannot listen");
 
     while (1) {
         printf("Waiting for connection on port %d\n", port);
-        int connect_d=open_client_socket();
-        make_thread(entry, share);
+        int connect_d = open_client_socket();
+
+
+        pthread_t tid = make_thread(connection_code, &connect_d);
 
     }
     return 0;
