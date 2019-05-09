@@ -176,8 +176,21 @@ Node *make_something() {
     node3->next = node2;
 
     return node3;
+
+
 }
 
+
+void free_l(Node *list) {
+	Node *curr = list;
+	Node *next = list->next;
+	free(curr);
+	while(next != NULL) {
+		curr = next;
+		next = curr->next;
+		free(curr);
+	}
+}
 
 int main() {
     // make a list of even numbers
@@ -207,7 +220,10 @@ int main() {
     print_list(&empty);
 
     Node *something = make_something();
-    free(something);
+    free_l(something);
+    free_l(test_list);
+    free_l(empty);
+
 
     return 0;
 }
